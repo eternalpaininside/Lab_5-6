@@ -12,7 +12,7 @@ namespace Lab_5_6
 {
     internal class Var1
     {
-        // ввод чисел и интерфейс
+        #region ввод чисел и интерфейс
         static Random random = new Random();
 
         static void PrintMenu(string[] menuText)
@@ -30,7 +30,7 @@ namespace Lab_5_6
             string result = $@"{borders}
  {message}
 {borders}";
-            ColoringMessage(result, 12);
+            ColoringMessage(result, 10);
             Console.WriteLine();
         }
 
@@ -91,6 +91,30 @@ namespace Lab_5_6
             Console.ForegroundColor = ConsoleColor.White;
         }
 
+        static void PrintNumberColumn(int[,] matr)
+        {
+            int lengthmatr = matr.GetLength(0);
+            Console.Write(new string(' ', 12) + "|");
+            for (int i = 0; i < lengthmatr; i++)
+            {
+                ColoringMessage($"{i + 1} столбец |", 14);
+            }
+            Console.WriteLine();
+        }
+        
+        static void PrintNumberColumn(int[][] ragArr)
+        {
+            Console.Write(new string(' ', 9) + '|');
+            int longestLine = FindLongestLine(ragArr);
+            for (int i = 0; i < ragArr[longestLine].Length; i++)
+            {
+                Console.Write($" {i + 1} столбец|");
+            }
+            Console.WriteLine();
+        }
+        #endregion
+
+        #region Работа с двумерными массивами
         static void CreateSizeMatrix(out int width, out int height)
         {
             string[] messages1 = { "Введите ширину матрицы: ", "Ширина не может быть такой! ", "Данное число некорректно для ширины! " };
@@ -99,7 +123,6 @@ namespace Lab_5_6
             height = ReadInt(messages2, 1, 256);
         }
 
-        // логика работы с массивами
         static void CreateArtificialMatrix(out int[,] matr)
         {
             string[] messages = { "", "То что вы ввели не похоже на целое число! ", "Данное число слишком большое/малое! " };
@@ -146,17 +169,6 @@ namespace Lab_5_6
                 numberLine++;
                 Console.WriteLine();
             }
-        }
-
-        static void PrintNumberColumn(int[,] matr)
-        {
-            int lengthmatr = matr.GetLength(0);
-            Console.Write(new string (' ', 12) + "|");
-            for (int i = 0; i < lengthmatr; i++)
-            {
-                ColoringMessage($"{i + 1} столбец |", 14);
-            }
-            Console.WriteLine();
         }
 
         static void InputLineInMatrix(ref int[,] matr, int lineNumber)
@@ -212,7 +224,9 @@ namespace Lab_5_6
             }
             matr = temp;
         }
+        #endregion
 
+        #region Работа с рванными массивами
         static int[][] CreateSizeRaggedArray(out int height)
         {
             string[] messagesHeight = { "Введите количество строк: ", "Ошибка ввода целого числа!", "Данное число некорректно для высоты!" };
@@ -256,17 +270,6 @@ namespace Lab_5_6
                 }
             }
             return ragArr;
-        }
-
-        static void PrintNumberColumn(int[][] ragArr)
-        {
-            Console.Write(new string (' ',9) + '|');
-            int longestLine = FindLongestLine(ragArr);
-            for (int i = 0; i < ragArr[longestLine].Length; i++)
-            {
-                Console.Write($" {i + 1} столбец|");
-            }
-            Console.WriteLine();
         }
 
         static void PrintRaggedArray(int[][] ragArr)
@@ -342,7 +345,9 @@ namespace Lab_5_6
             }
             CopyingRagArray(ref ragArr, ref temp, longestLineNumber);
         }
+        #endregion
 
+        #region Работа со строками
         static string WriteString()
         {
             Console.Write("Вводите вашу строку: ");
@@ -409,10 +414,10 @@ namespace Lab_5_6
                         sentenceCount++;
                     }
                     sentenceCount++;
-                    // Нашли конец предложения
-                    string currentSentenceContent = inputString.Substring(lastEndIndex, i - lastEndIndex + 1); // Включая разделитель
+                    // Нашли конец предложения включая разделитель
+                    string currentSentenceContent = inputString.Substring(lastEndIndex, i - lastEndIndex + 1);
 
-                    // Ищем пробелы после разделителя
+                    
                     int nextCharIndex = i + 1;
                     while (nextCharIndex < inputString.Length && char.IsWhiteSpace(inputString[nextCharIndex]))
                     {
@@ -420,10 +425,10 @@ namespace Lab_5_6
                     }
                     string trailingWhitespace = inputString.Substring(i + 1, nextCharIndex - (i + 1));
 
-                    string sentenceText = currentSentenceContent.TrimEnd(sentenceEndingDelimiters).Trim(); // Получаем только текст предложения
-                    char delimiter = currentSentenceContent.TrimStart()[currentSentenceContent.Length - 1]; // Получаем сам разделитель
+                    string sentenceText = currentSentenceContent.TrimEnd(sentenceEndingDelimiters).Trim(); // получаем только текст предложения
+                    char delimiter = currentSentenceContent.TrimStart()[currentSentenceContent.Length - 1]; // получаем сам разделитель
 
-                    if (sentenceCount % 2 != 0) // Если номер предложения нечетный (начиная с 1)
+                    if (sentenceCount % 2 != 0) 
                     {
                         string[] words = sentenceText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         for (int j = 0; j < words.Length; j++)
@@ -447,14 +452,13 @@ namespace Lab_5_6
                         resultString += sentenceText;
                     }
 
-                    resultString += delimiter; // Добавляем разделитель обратно
-                    resultString += trailingWhitespace; // Добавляем исходные пробелы
+                    resultString += delimiter; 
+                    resultString += trailingWhitespace; 
 
-                    lastEndIndex = nextCharIndex; // Обновляем начальный индекс для следующего предложения
+                    lastEndIndex = nextCharIndex; 
                 }
             }
-
-            // Если остался текст без конечного разделителя
+           
             if (lastEndIndex < inputString.Length)
             {
                 string remainingText = inputString.Substring(lastEndIndex).Trim();
@@ -554,8 +558,6 @@ namespace Lab_5_6
             return false;
         }
 
-        
-
         static bool EndsCorrectly(string inputString)
         {
             string trimmed = inputString.TrimEnd();
@@ -564,6 +566,7 @@ namespace Lab_5_6
 
             return Regex.IsMatch(trimmed, @"[.!?]$");
         }
+
         private static bool HasIncorrectSpacing(string inputString)
         {
             string spaceBeforePunctuation = @"\s[.,!?:;]";
@@ -627,7 +630,6 @@ namespace Lab_5_6
             }
             return result;
         }
-
         static string DeleteSpaceBeforeDot(string inputString)
         {
             string pattern = @"\s+[.]";
@@ -654,6 +656,7 @@ namespace Lab_5_6
             string result = regex.Replace(inputString, target);
             return result;
         }
+        #endregion
 
         static void Main(string[] args)
         {
